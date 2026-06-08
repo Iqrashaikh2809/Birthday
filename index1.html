@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <title>💗 For My Love | Maajid's Birthday Login</title>
+  <!-- Google Fonts + Font Awesome -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;40..32,400;40..32,500;40..32,600;40..32,700;40..32,800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <!-- Canvas Confetti -->
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1"></script>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      min-height: 100vh;
+      background: linear-gradient(145deg, #FFE9F0 0%, #FFD9E8 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      overflow-x: hidden;
+    }
+
+    /* Floating pastel balloons & sparkles */
+    .floating-bg {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      pointer-events: none;
+      z-index: 0;
+    }
+    .balloon {
+      position: absolute;
+      font-size: 2.5rem;
+      animation: float 12s infinite ease-in-out;
+      opacity: 0.55;
+      filter: drop-shadow(0 4px 8px rgba(255, 120, 160, 0.3));
+    }
+    @keyframes float {
+      0% { transform: translateY(0px) rotate(0deg); }
+      50% { transform: translateY(-40px) rotate(5deg); }
+      100% { transform: translateY(0px) rotate(0deg); }
+    }
+    .sparkle {
+      position: absolute;
+      background: radial-gradient(circle, #FFB7C5, #FF9FB0);
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      animation: twinkle 3s infinite;
+    }
+    @keyframes twinkle {
+      0% { opacity: 0; transform: scale(0.5); }
+      50% { opacity: 1; transform: scale(1.3); }
+      100% { opacity: 0; transform: scale(0.5); }
+    }
+
+    /* Main login card - pastel pink glassmorphism */
+    .login-container {
+      position: relative;
+      z-index: 10;
+      width: 100%;
+      max-width: 460px;
+      margin: 20px;
+    }
+    .login-card {
+      background: rgba(255, 245, 250, 0.88);
+      backdrop-filter: blur(16px);
+      border-radius: 56px;
+      padding: 44px 36px;
+      box-shadow: 0 30px 50px rgba(255, 105, 140, 0.2), 0 0 0 1px rgba(255, 200, 215, 0.8);
+      text-align: center;
+      transition: transform 0.25s ease;
+      border: 1px solid rgba(255, 220, 230, 0.9);
+    }
+    .login-card:hover {
+      transform: scale(1.01);
+    }
+    .heart-icon {
+      font-size: 3.8rem;
+      margin-bottom: 12px;
+      color: #FF8DAA;
+      filter: drop-shadow(0 6px 12px rgba(255, 80, 120, 0.2));
+    }
+    h1 {
+      font-size: 2rem;
+      font-weight: 800;
+      background: linear-gradient(135deg, #E85D8C, #FF9DB5);
+      background-clip: text;
+      -webkit-background-clip: text;
+      color: transparent;
+      margin-bottom: 8px;
+    }
+    .sub {
+      color: #C26A85;
+      font-weight: 500;
+      margin-bottom: 28px;
+      font-size: 0.95rem;
+      letter-spacing: -0.2px;
+    }
+    .love-badge {
+      display: inline-block;
+      background: #FFE2EC;
+      border-radius: 60px;
+      padding: 6px 18px;
+      font-size: 0.8rem;
+      color: #BC5F7A;
+      margin-bottom: 24px;
+    }
+    /* guess password section */
+    .input-group {
+      margin-bottom: 24px;
+      text-align: left;
+    }
+    .input-group label {
+      font-weight: 600;
+      color: #C25D7C;
+      display: block;
+      margin-bottom: 8px;
+      font-size: 0.9rem;
+    }
+    .input-group i {
+      position: absolute;
+      margin-left: 18px;
+      margin-top: 16px;
+      color: #F57A9A;
+      font-size: 1rem;
+    }
+    .input-group input {
+      width: 100%;
+      padding: 14px 16px 14px 48px;
+      border: 1.5px solid #FFD0DE;
+      border-radius: 60px;
+      background: rgba(255, 255, 252, 0.95);
+      font-size: 1rem;
+      outline: none;
+      transition: all 0.2s;
+      font-family: 'Inter', sans-serif;
+    }
+    .input-group input:focus {
+      border-color: #FF8DAB;
+      box-shadow: 0 0 0 3px rgba(255, 140, 170, 0.2);
+      background: white;
+    }
+    .hint-box {
+      background: #FFEFF4;
+      border-radius: 40px;
+      padding: 12px 16px;
+      margin: 16px 0 20px 0;
+      font-size: 0.85rem;
+      color: #B34E70;
+      text-align: center;
+      border: 1px dashed #FFB7CC;
+    }
+    .hint-box i {
+      margin-right: 6px;
+      color: #F56C92;
+    }
+    .login-btn {
+      background: #FF8DAB;
+      width: 100%;
+      border: none;
+      padding: 14px;
+      border-radius: 60px;
+      color: white;
+      font-weight: 700;
+      font-size: 1.1rem;
+      cursor: pointer;
+      transition: 0.25s;
+      box-shadow: 0 6px 14px rgba(255, 100, 130, 0.3);
+      margin-top: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+    }
+    .login-btn:hover {
+      background: #FF6E96;
+      transform: translateY(-2px);
+      box-shadow: 0 10px 20px rgba(255, 80, 110, 0.35);
+    }
+    .extra-links {
+      margin-top: 24px;
+      font-size: 0.8rem;
+      color: #BC6F88;
+    }
+    .extra-links a {
+      color: #E55A7E;
+      text-decoration: none;
+      font-weight: 600;
+    }
+    .demo-note {
+      background: rgba(255, 225, 235, 0.7);
+      border-radius: 60px;
+      padding: 10px;
+      margin-top: 24px;
+      font-size: 0.7rem;
+      color: #A64D6B;
+    }
+    footer {
+      margin-top: 20px;
+      text-align: center;
+      font-size: 0.7rem;
+      color: #C06782;
+    }
+    @media (max-width: 500px) {
+      .login-card { padding: 34px 24px; }
+      h1 { font-size: 1.7rem; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="floating-bg">
+  <div class="balloon" style="top: 12%; left: 5%; animation-duration: 14s;">🎈</div>
+  <div class="balloon" style="top: 68%; left: 88%; animation-duration: 11s;">🎀</div>
+  <div class="balloon" style="top: 45%; left: 90%; animation-duration: 16s;">💗</div>
+  <div class="balloon" style="top: 85%; left: 10%; animation-duration: 18s;">✨</div>
+  <div class="balloon" style="top: 22%; right: 6%; animation-duration: 13s;">🎂</div>
+</div>
+
+<div class="login-container">
+  <div class="login-card">
+    <div class="heart-icon">
+      <i class="fas fa-heart"></i>
+    </div>
+    <h1>For My Love, Maajid 💕</h1>
+    <div class="sub">🌸 7th June 2004 — Turning 22 🌸</div>
+    <div class="love-badge">
+      <i class="fas fa-star"></i> You're my everything <i class="fas fa-star"></i>
+    </div>
+
+    <!-- Only password guess, no email -->
+    <form id="loginForm">
+      <div class="input-group">
+        <label><i class="fas fa-lock"></i> Guess the Secret Password To Login👉👈🤭 </label>
+        <i class="fas fa-question-circle"></i>
+        <input type="password" id="password" placeholder="Enter the magic code..." autocomplete="off">
+      </div>
+
+      <!-- Hint leading to 2807 -->
+      <div class="hint-box">
+        <i class="fas fa-lightbulb"></i> 💡 Hint: It's a 4-digit number that means everything to us.  
+        <strong style="color:#E55A7E;">(Think of the number that lives in Our heart forever)</strong> 💗
+      </div>
+
+      <button onclick="funn()" id="loginnn" type="submit" class="login-btn"><i class="fas fa-gift"></i> Unlock Birthday Magic</button>
+    </form>
+
+    <div class="extra-links">
+      <a href="#"><i class="fas fa-heart"></i>  For you only  <i class="fas fa-heart"></i></a>
+    </div>
+    <div class="demo-note">
+      <i class="fas fa-magic"></i> ✨ The password is a special 4-digit code — only we know its meaning. Enter it and feel the love ✨
+    </div>
+  </div>
+  <footer>💖 Every love story begins with a magical guess 💖</footer>
+</div>
+
+<script>
+  // Create pastel sparkles
+  function createSparkles() {
+    for (let i = 0; i < 35; i++) {
+      let span = document.createElement("div");
+      span.classList.add("sparkle");
+      span.style.left = Math.random() * 100 + "%";
+      span.style.top = Math.random() * 100 + "%";
+      span.style.animationDelay = Math.random() * 5 + "s";
+      span.style.animationDuration = Math.random() * 2 + 2 + "s";
+      document.querySelector(".floating-bg").appendChild(span);
+      setTimeout(() => span.remove(), 4000);
+    }
+  }
+  setInterval(createSparkles, 4800);
+  createSparkles();
+
+  // Confetti celebration
+  function burstConfetti() {
+    canvasConfetti({ particleCount: 220, spread: 85, origin: { y: 0.6 }, startVelocity: 22, colors: ['#FF9DB5', '#FFB7CC', '#FFC0D0', '#FF88AA'] });
+    setTimeout(() => {
+      canvasConfetti({ particleCount: 120, spread: 130, origin: { y: 0.4 }, startVelocity: 28, colors: ['#FF95B0', '#FFB0C3'] });
+    }, 150);
+    setTimeout(() => {
+      canvasConfetti({ particleCount: 60, spread: 70, origin: { y: 0.5, x: 0.2 }, startVelocity: 18 });
+    }, 300);
+  }
+
+  // --- EXACT PASSWORD: 2807, redirect to page1.html ---
+  const CORRECT_PASSWORD = "2807";
+  
+  const loginForm = document.getElementById('loginForm');
+  const passwordInput = document.getElementById('password');
+
+  loginForm.addEventListener('submit', function(e) {
+    e.preventDefault();
+    const guess = passwordInput.value.trim();
+    
+    if (guess === CORRECT_PASSWORD) {
+      
+        window.location.href = "page1.html";
+      
+    } else {
+      // wrong guess - gentle shake effect
+      passwordInput.style.borderColor = "#FF8DA0";
+      passwordInput.style.boxShadow = "0 0 0 2px rgba(255, 100, 130, 0.3)";
+      setTimeout(() => {
+        passwordInput.style.borderColor = "#FFD0DE";
+        passwordInput.style.boxShadow = "none";
+      }, 500);
+      
+      // loving hint again
+      alert("💗 Hmm... not the right code, my love. 💗\n\nThink of the 4-digit number. Try again?");
+    }
+  });
+
+  // Bonus: click on balloons triggers mini confetti for fun
+  document.querySelectorAll('.balloon').forEach(ball => {
+    ball.addEventListener('click', () => {
+      canvasConfetti({ particleCount: 40, spread: 45, origin: { y: 0.7 }, startVelocity: 12, colors: ['#FFB0C3', '#FF9DB5'] });
+      ball.style.transform = 'scale(1.2)';
+      setTimeout(() => ball.style.transform = '', 250);
+    });
+  });
+  
+  
+
+</script>
+</body>
+</html>

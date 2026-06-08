@@ -1,0 +1,353 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <title>💕 Our Story | Memories</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      background: linear-gradient(145deg, #FFF0F5 0%, #FFE4EE 100%);
+      font-family: 'Segoe UI', 'Inter', system-ui, -apple-system, 'Helvetica Neue', sans-serif;
+      padding: 40px 24px;
+      position: relative;
+      min-height: 100vh;
+    }
+
+    /* floating hearts */
+    .floating-heart {
+      position: fixed;
+      pointer-events: none;
+      font-size: 1.8rem;
+      animation: floatHeart 12s infinite ease-in-out;
+      opacity: 0.25;
+      z-index: 0;
+    }
+    @keyframes floatHeart {
+      0% { transform: translateY(0px) rotate(0deg); }
+      50% { transform: translateY(-35px) rotate(6deg); }
+      100% { transform: translateY(0px) rotate(0deg); }
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      position: relative;
+      z-index: 2;
+    }
+
+    /* header */
+    .memory-header {
+      text-align: center;
+      margin-bottom: 50px;
+    }
+    .memory-header h1 {
+      font-size: clamp(2rem, 6vw, 3.2rem);
+      font-weight: 800;
+      background: linear-gradient(135deg, #E85D8C, #FF9DB5);
+      background-clip: text;
+      -webkit-background-clip: text;
+      color: transparent;
+      margin-bottom: 12px;
+    }
+    .memory-header p {
+      color: #C26A85;
+      font-size: 1rem;
+      font-weight: 500;
+    }
+    .divider {
+      width: 80px;
+      height: 3px;
+      background: #FFB7CC;
+      margin: 20px auto;
+      border-radius: 10px;
+    }
+
+    /* masonry / instagram story style grid with varying sizes */
+    .memories-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 24px;
+      grid-auto-flow: dense;
+    }
+
+    /* each memory card can have different spans */
+    .memory-card {
+      background: rgba(255, 248, 250, 0.85);
+      backdrop-filter: blur(6px);
+      border-radius: 32px;
+      overflow: hidden;
+      box-shadow: 0 20px 30px -10px rgba(255, 100, 130, 0.2);
+      transition: all 0.35s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+      border: 1px solid rgba(255, 200, 215, 0.8);
+      position: relative;
+      animation: fadeInUp 0.6s ease backwards;
+    }
+
+    .memory-card:hover {
+      transform: translateY(-10px) scale(1.02);
+      box-shadow: 0 30px 45px -12px rgba(255, 80, 110, 0.4);
+    }
+
+    /* different sizes like instagram stories */
+    .memory-card.wide {
+      grid-column: span 2;
+    }
+    .memory-card.tall {
+      grid-row: span 2;
+    }
+    .memory-card.square {
+      grid-column: span 1;
+      grid-row: span 1;
+    }
+
+    /* images */
+    .memory-img {
+      width: 100%;
+      height: auto;
+      display: block;
+      transition: transform 0.5s ease;
+      object-fit: cover;
+    }
+    .memory-card:hover .memory-img {
+      transform: scale(1.03);
+    }
+
+    /* for different aspect ratios */
+    .img-portrait {
+      aspect-ratio: 3 / 4;
+    }
+    .img-landscape {
+      aspect-ratio: 4 / 3;
+    }
+    .img-square {
+      aspect-ratio: 1 / 1;
+    }
+
+    /* overlay text (like story caption) */
+    .memory-caption {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: linear-gradient(to top, rgba(0,0,0,0.6), transparent);
+      color: white;
+      padding: 20px 16px 12px;
+      backdrop-filter: blur(2px);
+      font-weight: 500;
+      font-size: 0.9rem;
+      transform: translateY(100%);
+      transition: transform 0.3s ease;
+      text-align: center;
+      border-radius: 0 0 32px 32px;
+    }
+    .memory-card:hover .memory-caption {
+      transform: translateY(0);
+    }
+    .memory-caption span {
+      display: inline-block;
+      background: rgba(255, 140, 170, 0.7);
+      padding: 4px 12px;
+      border-radius: 40px;
+      font-size: 0.75rem;
+      margin-top: 6px;
+    }
+
+    /* optional date badge */
+    .date-badge {
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      background: rgba(255, 255, 255, 0.8);
+      backdrop-filter: blur(8px);
+      padding: 4px 10px;
+      border-radius: 40px;
+      font-size: 0.7rem;
+      font-weight: 600;
+      color: #B34E70;
+      z-index: 2;
+      pointer-events: none;
+    }
+
+    /* different animations for cards */
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* individual delays */
+    .memory-card:nth-child(1) { animation-delay: 0.05s; }
+    .memory-card:nth-child(2) { animation-delay: 0.1s; }
+    .memory-card:nth-child(3) { animation-delay: 0.15s; }
+    .memory-card:nth-child(4) { animation-delay: 0.2s; }
+    .memory-card:nth-child(5) { animation-delay: 0.25s; }
+    .memory-card:nth-child(6) { animation-delay: 0.3s; }
+    .memory-card:nth-child(7) { animation-delay: 0.35s; }
+    .memory-card:nth-child(8) { animation-delay: 0.4s; }
+    .memory-card:nth-child(9) { animation-delay: 0.45s; }
+
+    footer {
+      text-align: center;
+      margin-top: 50px;
+      color: #C58198;
+      font-size: 0.75rem;
+    }
+
+    @media (max-width: 760px) {
+      body { padding: 24px 16px; }
+      .memories-grid {
+        gap: 16px;
+      }
+      .memory-card.wide {
+        grid-column: span 1;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<div class="floating-heart" style="top: 5%; left: 2%; animation-duration: 14s;">💖</div>
+<div class="floating-heart" style="top: 80%; left: 95%; animation-duration: 11s;">💗</div>
+<div class="floating-heart" style="top: 45%; left: 97%; animation-duration: 16s;">✨</div>
+<div class="floating-heart" style="top: 15%; right: 3%; animation-duration: 13s;">💕</div>
+<div class="floating-heart" style="bottom: 8%; left: 4%; animation-duration: 18s;">🌸</div>
+
+<div class="container">
+  <div class="memory-header">
+    <h1><i class="fas fa-heart"></i> Our Story | Memories <i class="fas fa-heart"></i></h1>
+    <div class="divider"></div>
+    <p>A Journey Written in Smiles, Captured in Photos, and Filled with Countless Moments We'll Cherish Forever</p>
+  </div>
+
+  <div class="memories-grid">
+    <!-- card 1 - wide (landscape) -->
+    <div class="memory-card wide">
+      <div class="date-badge">✨ Happy Together ✨</div>
+      <img class="memory-img img-landscape" src="./img/1.jpeg" alt="memory 1" onerror="this.src='https://placehold.co/600x400/FFE2EC/FF8DAA?text=img1.png'">
+      <div class="memory-caption">
+       Your smile makes every moment brighter forever ❤️😊.<br>
+        <span></span>
+      </div>
+    </div>
+
+    <!-- card 2 (UPPER part of old tall image) - square -->
+    <div class="memory-card square">
+      <div class="date-badge">✨Eid Elegance ✨</div>
+      <img class="memory-img " style="height: 500px;" src="./img/2.jpeg"  alt="memory 2 upper" onerror="this.src='https://placehold.co/500x500/FFE2EC/FF8DAA?text=upper+part'">
+      <div class="memory-caption">
+        Your presence makes this festive day shine brighter❤️.<br>
+        <span></span>
+      </div>
+    </div>
+
+    <!-- card 3 (LOWER part of old tall image) - square -->
+    <div class="memory-card square">
+      <div class="date-badge">✨ Forever Choice✨</div>
+      <img class="memory-img " src="./img/8.jpeg" alt="memory 2 lower" onerror="this.src='https://placehold.co/500x500/FFE2EC/FF8DAA?text=lower+part'">
+      <div class="memory-caption">
+        I'd choose you in every lifetime, always.💞🌸<br>
+        <span></span>
+      </div>
+    </div>
+
+    <!-- card 4 - square (original card 3) -->
+    <div class="memory-card square">
+      <div class="date-badge">✨ Matching Steps ✨</div>
+      <img class="memory-img " src="./img/3.jpeg" alt="memory 3" onerror="this.src='https://placehold.co/500x500/FFE2EC/FF8DAA?text=img3.png'">
+      <div class="memory-caption">
+        Walking beside you makes every path beautiful.👟💕<br>
+        <span></span>
+      </div>
+    </div>
+
+    <!-- card 5 - wide (original card 4) -->
+    <div class="memory-card wide">
+      <div class="date-badge">✨Seaside Love ✨</div>
+      <img class="memory-img img-landscape" style="height: 500px;" src="./img/6.jpeg" alt="memory 4" onerror="this.src='https://placehold.co/600x400/FFE2EC/FF8DAA?text=img4.png'">
+      <div class="memory-caption">
+        With you, every view becomes a memory🌊❤️.<br>
+        <span></span>
+      </div>
+    </div>
+
+    <!-- card 6 - square (original card 5) -->
+    <div class="memory-card square">
+      <div class="date-badge">✨ Cool Vibes ✨</div>
+      <img class="memory-img " src="./img/10.jpeg" alt="memory 5" onerror="this.src='https://placehold.co/500x500/FFE2EC/FF8DAA?text=img5.png'">
+      <div class="memory-caption">
+       Every glance of yours feels like home😎✨.<br>
+        <span></span>
+      </div>
+    </div>
+
+    <!-- card 7 - square (original card 6 was tall, now replaced) -->
+    <div class="memory-card square">
+      <div class="date-badge">✨Perfect Pair ✨</div>
+      <img class="memory-img " style="height: 500px;" src="./img/5.jpeg" alt="memory 6" onerror="this.src='https://placehold.co/500x500/FFE2EC/FF8DAA?text=img6.png'">
+      <div class="memory-caption">
+        Every adventure feels magical when we're together.🥰✨💕<br>
+        <span></span>
+      </div>
+    </div>
+
+    <!-- card 8 - square (original card 7) -->
+    <div class="memory-card square">
+      <div class="date-badge">✨ Beach Bliss✨</div>
+      <img class="memory-img " src="img/11.jpeg" alt="memory 7" onerror="this.src='https://placehold.co/500x500/FFE2EC/FF8DAA?text=img7.png'">
+      <div class="memory-caption">
+        Every moment together feels warm and unforgettable.💕🏖️<br>
+        <span></span>
+      </div>
+    </div>
+
+    <!-- card 9 - wide (original card 8) -->
+    <div class="memory-card wide">
+      <div class="date-badge">✨ Holding Hearts ✨</div>
+      <img class="memory-img " src="./img/4.jpeg" style="height: 500px;" alt="memory 8" onerror="this.src='https://placehold.co/600x400/FFE2EC/FF8DAA?text=img8.png'">
+      <div class="memory-caption">
+        In your hands, my heart feels safe.🤝🌹❤️<br>
+        <span></span>
+      </div>
+    </div>
+  </div>
+
+  <footer style="text-align: center; margin-top: 50px;">
+    <a href="Birthday-Website-main/index.html" style="text-decoration: none;">
+      <button style="
+        background: #FF8DAB;
+        border: none;
+        padding: 12px 32px;
+        border-radius: 60px;
+        color: white;
+        font-weight: 600;
+        font-size: 1rem;
+        cursor: pointer;
+        transition: 0.2s;
+        box-shadow: 0 8px 18px rgba(255, 100, 130, 0.3);
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+      " onmouseover="this.style.background='#FF6E96'; this.style.transform='translateY(-2px)';" onmouseout="this.style.background='#FF8DAB'; this.style.transform='translateY(0)';">
+        ✨ Let's celebrate 💕💕💕
+      </button>
+    </a>
+    <br><br>
+  </footer>
+</div>
+
+<!-- fontawesome for icons -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</body>
+</html>

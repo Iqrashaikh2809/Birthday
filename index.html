@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <title>✨ fix your heart ✨</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      min-height: 100vh;
+      background: linear-gradient(145deg, #FFF0F5 0%, #FFE4EE 100%);
+      font-family: system-ui, -apple-system, 'Segoe UI', 'Inter', 'Helvetica Neue', sans-serif;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      overflow-x: hidden;
+      padding: 20px;
+    }
+
+    /* floating hearts & sparkles */
+    .floating-heart {
+      position: absolute;
+      pointer-events: none;
+      font-size: 1.8rem;
+      animation: floatHeart 12s infinite ease-in-out;
+      opacity: 0.45;
+      z-index: 0;
+    }
+    @keyframes floatHeart {
+      0% { transform: translateY(0px) rotate(0deg); }
+      50% { transform: translateY(-35px) rotate(6deg); }
+      100% { transform: translateY(0px) rotate(0deg); }
+    }
+    .sparkle {
+      position: absolute;
+      background: radial-gradient(circle, #FFB7C5, #FF9FB0);
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      animation: twinkle 3s infinite;
+      pointer-events: none;
+    }
+    @keyframes twinkle {
+      0% { opacity: 0; transform: scale(0.5); }
+      50% { opacity: 1; transform: scale(1.3); }
+      100% { opacity: 0; transform: scale(0.5); }
+    }
+
+    /* main glass card */
+    .magic-card {
+      position: relative;
+      z-index: 10;
+      max-width: 580px;
+      width: 100%;
+      background: rgba(255, 248, 250, 0.88);
+      backdrop-filter: blur(18px);
+      border-radius: 68px;
+      padding: 48px 32px 56px;
+      box-shadow: 0 35px 55px rgba(255, 100, 130, 0.25), 0 0 0 1px rgba(255, 200, 215, 0.8);
+      text-align: center;
+      transition: transform 0.3s ease;
+      border: 1px solid rgba(255, 220, 230, 0.9);
+    }
+    .magic-card:hover {
+      transform: scale(1.01);
+    }
+
+    .question {
+      font-size: clamp(1.4rem, 5.5vw, 2rem);
+      font-weight: 600;
+      color: #B34E70;
+      margin-bottom: 20px;
+      letter-spacing: -0.2px;
+    }
+    .magic-line {
+      font-size: clamp(1.2rem, 4.8vw, 1.7rem);
+      font-weight: 500;
+      color: #C25D7C;
+      margin: 16px 0 12px;
+    }
+    .heart-message {
+      background: rgba(255, 230, 240, 0.6);
+      border-radius: 48px;
+      padding: 24px 20px;
+      margin: 28px 0 32px;
+      border: 1px solid #FFB7CC;
+    }
+    .heart-message p {
+      font-size: 1rem;
+      line-height: 1.5;
+      color: #9C4D6B;
+      font-weight: 500;
+    }
+    .btn-begin {
+      background: #FF8DAB;
+      border: none;
+      padding: 14px 32px;
+      border-radius: 60px;
+      color: white;
+      font-weight: 700;
+      font-size: 1.1rem;
+      cursor: pointer;
+      transition: 0.25s;
+      box-shadow: 0 8px 18px rgba(255, 100, 130, 0.3);
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: 8px;
+    }
+    .btn-begin:hover {
+      background: #FF6E96;
+      transform: translateY(-2px);
+      box-shadow: 0 14px 24px rgba(255, 80, 110, 0.35);
+    }
+    footer {
+      margin-top: 40px;
+      font-size: 0.7rem;
+      color: #C58198;
+      letter-spacing: 0.5px;
+    }
+    @media (max-width: 550px) {
+      .magic-card { padding: 36px 20px 44px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- floating hearts exactly like the vibe -->
+<div class="floating-heart" style="top: 8%; left: 5%; animation-duration: 14s;">💖</div>
+<div class="floating-heart" style="top: 70%; left: 88%; animation-duration: 11s;">💗</div>
+<div class="floating-heart" style="top: 45%; left: 92%; animation-duration: 16s;">✨</div>
+<div class="floating-heart" style="top: 82%; left: 12%; animation-duration: 18s;">🌸</div>
+<div class="floating-heart" style="top: 18%; right: 6%; animation-duration: 13s;">💕</div>
+<div class="floating-heart" style="bottom: 5%; right: 15%; animation-duration: 15s;">🎀</div>
+<div class="floating-heart" style="top: 50%; left: 3%; animation-duration: 17s;">❤️</div>
+<div class="floating-heart" style="bottom: 20%; left: 80%; animation-duration: 12s;">💖</div>
+
+<div class="magic-card">
+  <div class="question">✨ Is it your birthday today  ?? ✨</div>
+  <div class="question">Mr. Khan  ❤️🤔</div>
+  <div class="magic-line">Something magical is about to happen...</div>
+  <div class="heart-message">
+    <p>💓 But first we need to fix your heart ❤️<br>Because it deals with so much and needs love 💓</p>
+  </div>
+  <button class="btn-begin" id="beginBtn">Let's Begin! &nbsp;<3</button>
+  <footer>✨ with love, always ✨</footer>
+</div>
+
+<script>
+  // sparkles generator
+  function createSparkles() {
+    for (let i = 0; i < 40; i++) {
+      let span = document.createElement("div");
+      span.classList.add("sparkle");
+      span.style.left = Math.random() * 100 + "%";
+      span.style.top = Math.random() * 100 + "%";
+      span.style.animationDelay = Math.random() * 5 + "s";
+      span.style.animationDuration = Math.random() * 2 + 2 + "s";
+      document.body.appendChild(span);
+      setTimeout(() => span.remove(), 4000);
+    }
+  }
+  setInterval(createSparkles, 4800);
+  createSparkles();
+
+  // gentle floating heart movement on iteration
+  const hearts = document.querySelectorAll('.floating-heart');
+  hearts.forEach(heart => {
+    heart.addEventListener('animationiteration', () => {
+      const randomX = Math.random() * 8 - 4;
+      const randomY = Math.random() * 8 - 4;
+      heart.style.transform = `translate(${randomX}px, ${randomY}px)`;
+    });
+  });
+
+  // confetti + magical effect on button click
+  const beginBtn = document.getElementById('beginBtn');
+  const script = document.createElement('script');
+  script.src = 'https://cdn.jsdelivr.net/npm/canvas-confetti@1';
+  document.head.appendChild(script);
+
+  script.onload = () => {
+    beginBtn.addEventListener('click', () => {
+      canvasConfetti({ particleCount: 250, spread: 90, origin: { y: 0.6 }, startVelocity: 22, colors: ['#FF9DB5', '#FFB7CC', '#FFC0D0', '#FF88AA'] });
+      setTimeout(() => {
+        canvasConfetti({ particleCount: 150, spread: 140, origin: { y: 0.4 }, startVelocity: 28, colors: ['#FF95B0', '#FFB0C3'] });
+      }, 150);
+      setTimeout(() => {
+        canvasConfetti({ particleCount: 80, spread: 80, origin: { y: 0.5, x: 0.3 }, startVelocity: 18 });
+      }, 300);
+      // change button text temporarily
+      const originalHTML = beginBtn.innerHTML;
+      beginBtn.innerHTML = '✨ Healing your heart ✨';
+      beginBtn.style.background = "#FF6E96";
+      setTimeout(() => {
+        beginBtn.innerHTML = originalHTML;
+        beginBtn.style.background = "#FF8DAB";
+      }, 2000);
+      // sweet alert
+      setTimeout(() => {
+        alert("💖 Your heart is being wrapped in love. You are never alone. 💖");
+      }, 500);
+    });
+  };
+  // fallback if confetti fails
+  if (!window.canvasConfetti) {
+    beginBtn.addEventListener('click', () => {
+      window.location.href = "./index_1.html";
+    });
+  }
+</script>
+</body>
+</html>

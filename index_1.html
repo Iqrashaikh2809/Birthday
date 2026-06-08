@@ -1,0 +1,522 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <title>❤️ Mend the Heart | birthday magic</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      user-select: none; /* avoid accidental selection while dragging */
+    }
+
+    body {
+      background: linear-gradient(145deg, #FFF0F5 0%, #FFE4EE 100%);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-family: 'Segoe UI', 'Inter', system-ui, -apple-system, 'Helvetica Neue', sans-serif;
+      padding: 20px;
+    }
+
+    /* main card container */
+    .container {
+      max-width: 600px;
+      width: 100%;
+      background: rgba(255, 248, 250, 0.88);
+      backdrop-filter: blur(14px);
+      border-radius: 52px;
+      padding: 28px 24px 36px;
+      box-shadow: 0 25px 40px rgba(255, 100, 130, 0.2);
+      border: 1px solid rgba(255, 200, 215, 0.8);
+      transition: all 0.2s;
+    }
+
+    /* header */
+    .heart-title {
+      text-align: center;
+      font-size: 1.9rem;
+      font-weight: 700;
+      color: #B34E70;
+      letter-spacing: -0.3px;
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+    }
+    .sub {
+      text-align: center;
+      font-size: 0.85rem;
+      color: #C26A85;
+      margin-bottom: 18px;
+      border-bottom: 1px dashed #FFB7CC;
+      display: inline-block;
+      width: auto;
+      margin-left: auto;
+      margin-right: auto;
+      padding-bottom: 8px;
+    }
+
+    /* drag & drop zone */
+    .heart-puzzle {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin: 24px 0 18px;
+    }
+    /* drop zone (full heart outline) */
+    .drop-zone {
+      width: 180px;
+      height: 180px;
+      background: rgba(255, 225, 235, 0.6);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 28px;
+      border: 2px dashed #FF9DB5;
+      transition: all 0.2s;
+      position: relative;
+    }
+    .full-heart-bg {
+      width: 140px;
+      height: 140px;
+      background: rgba(255, 140, 170, 0.15);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 5rem;
+      color: rgba(255, 100, 130, 0.3);
+      transition: all 0.2s;
+    }
+    /* when both halves placed, the full heart becomes visible */
+    .full-heart-bg.completed {
+      color: #FF6E96;
+      text-shadow: 0 0 10px #FFB7CC;
+      background: rgba(255, 140, 170, 0.25);
+    }
+
+    /* draggable hearts container */
+    .pieces-container {
+      display: flex;
+      justify-content: center;
+      gap: 40px;
+      margin: 10px 0 20px;
+      flex-wrap: wrap;
+    }
+    .heart-half {
+      width: 100px;
+      height: 100px;
+      background: #FFD0DC;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 3.8rem;
+      cursor: grab;
+      transition: 0.1s linear;
+      box-shadow: 0 8px 14px rgba(0,0,0,0.05);
+      border: 2px solid #FFB7CC;
+      background: #FFE2EC;
+      user-select: none;
+    }
+    .heart-half:active {
+      cursor: grabbing;
+    }
+    .heart-half.dragging {
+      opacity: 0.5;
+      cursor: grabbing;
+    }
+
+    /* placed pieces inside drop zone */
+    .placed-piece {
+      position: absolute;
+      width: 70px;
+      height: 70px;
+      font-size: 3rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      pointer-events: none;
+      transition: 0.2s;
+    }
+    .placed-left {
+      left: 25px;
+      top: 55px;
+    }
+    .placed-right {
+      right: 25px;
+      top: 55px;
+    }
+
+    /* message area */
+    .message-area {
+      text-align: center;
+      margin: 20px 0 16px;
+      padding: 16px;
+      background: rgba(255, 245, 250, 0.7);
+      border-radius: 48px;
+      transition: 0.3s;
+    }
+    .success-message {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: #E55A7E;
+      margin-bottom: 12px;
+    }
+    .tap-heart {
+      background: #FF8DAB;
+      border: none;
+      padding: 12px 28px;
+      border-radius: 60px;
+      color: white;
+      font-weight: 600;
+      font-size: 1rem;
+      cursor: pointer;
+      box-shadow: 0 6px 12px rgba(255, 100, 130, 0.3);
+      transition: 0.2s;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .tap-heart:hover {
+      background: #FF6E96;
+      transform: scale(1.02);
+    }
+    .hidden-message {
+      margin-top: 16px;
+      font-size: 1rem;
+      color: #B34E70;
+      background: #FFF0F5;
+      padding: 12px;
+      border-radius: 48px;
+      display: none;
+    }
+    .hidden-message.show {
+      display: block;
+      animation: fadeSlide 0.4s ease;
+    }
+    @keyframes fadeSlide {
+      from { opacity: 0; transform: translateY(10px);}
+      to { opacity: 1; transform: translateY(0);}
+    }
+
+    /* weather + search row (exactly like image) */
+    .info-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 28px;
+      padding-top: 12px;
+      border-top: 1px solid #FFD0DC;
+      font-size: 0.9rem;
+      color: #BC5F7A;
+    }
+    .weather {
+      display: flex;
+      gap: 10px;
+      background: #FFEAF0;
+      padding: 6px 14px;
+      border-radius: 60px;
+    }
+    .search-box {
+      display: flex;
+      gap: 8px;
+      background: #FFEAF0;
+      padding: 6px 14px;
+      border-radius: 60px;
+    }
+    .search-box input {
+      background: transparent;
+      border: none;
+      outline: none;
+      font-size: 0.8rem;
+      width: 100px;
+      color: #A14D6B;
+    }
+    .search-box input::placeholder {
+      color: #D28AAA;
+    }
+    .search-box i {
+      color: #E55A7E;
+    }
+
+    /* reset button */
+    .reset-btn {
+      background: none;
+      border: 1px solid #FFB0C3;
+      padding: 6px 18px;
+      border-radius: 60px;
+      color: #B34E70;
+      font-size: 0.7rem;
+      cursor: pointer;
+      margin-top: 12px;
+      transition: 0.2s;
+    }
+    .reset-btn:hover {
+      background: #FFE2EC;
+    }
+
+    @media (max-width: 480px) {
+      .heart-half { width: 75px; height: 75px; font-size: 2.8rem; }
+      .drop-zone { width: 150px; height: 150px; }
+      .full-heart-bg { width: 120px; height: 120px; font-size: 3.8rem; }
+      .placed-piece { width: 55px; height: 55px; font-size: 2.3rem; }
+      .placed-left { left: 15px; top: 45px; }
+      .placed-right { right: 15px; top: 45px; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <div class="heart-title">
+    ❤️ Mend the Heart ❤️
+  </div>
+  <div style="text-align: center; font-size: 0.75rem; color:#C26A85; margin-bottom: 6px;">
+    (🔗 Left piece goes on the left, right piece goes on the right)
+  </div>
+
+  <!-- puzzle area -->
+  <div class="heart-puzzle">
+    <!-- drop zone: full heart background (low opacity) -->
+    <div class="drop-zone" id="dropZone">
+      <div class="full-heart-bg" id="fullHeartBg">
+        ❤️
+      </div>
+      <!-- dynamically placed half hearts will appear here as absolute children -->
+      <div id="placedLeft" class="placed-piece placed-left" style="display: none;">💖</div>
+      <div id="placedRight" class="placed-piece placed-right" style="display: none;">💖</div>
+    </div>
+
+    <!-- draggable pieces -->
+    <div class="pieces-container">
+      <div id="leftHeart" class="heart-half" draggable="true" data-side="left">💔</div>
+      <div id="rightHeart" class="heart-half" draggable="true" data-side="right">💔</div>
+    </div>
+  </div>
+
+  <!-- dynamic message area -->
+  <div class="message-area" id="messageArea">
+    <div id="successMsg" class="success-message" style="display: none;">Your Heart is Whole Again! 🥰</div>
+    <div id="tapHeartWrapper" style="display: none;">
+      <button id="tapHeartBtn" class="tap-heart">❤️ now let's celebrate this special feeling, my love ❤️🥰</button>
+      <div id="birthdayMsg" class="hidden-message"></div>
+    </div>
+  </div>
+
+  <!-- weather + search (exactly as image) -->
+  
+
+  
+</div>
+
+<!-- Font Awesome for search icon -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+<script>
+  // Game state
+  let leftPlaced = false;
+  let rightPlaced = false;
+  let leftPieceElem = document.getElementById('leftHeart');
+  let rightPieceElem = document.getElementById('rightHeart');
+  const dropZone = document.getElementById('dropZone');
+  const fullHeartBg = document.getElementById('fullHeartBg');
+  const placedLeftDiv = document.getElementById('placedLeft');
+  const placedRightDiv = document.getElementById('placedRight');
+  const successMsgDiv = document.getElementById('successMsg');
+  const tapHeartWrapper = document.getElementById('tapHeartWrapper');
+  const birthdayMsgDiv = document.getElementById('birthdayMsg');
+  const tapBtn = document.getElementById('tapHeartBtn');
+  const resetBtn = document.getElementById('resetGame');
+
+  // helper to check completion
+  function checkCompletion() {
+    if (leftPlaced && rightPlaced) {
+      // both halves placed → show success message, enable tap heart
+      successMsgDiv.style.display = 'block';
+      tapHeartWrapper.style.display = 'block';
+      fullHeartBg.classList.add('completed');
+      fullHeartBg.style.fontSize = '5rem';
+      fullHeartBg.style.color = '#FF6E96';
+      // little confetti burst for mending heart
+      if (typeof canvasConfetti !== 'undefined') {
+        canvasConfetti({ particleCount: 120, spread: 55, origin: { y: 0.6 }, colors: ['#FF9DB5', '#FFB7CC'] });
+      } else {
+        // fallback load confetti
+        loadConfettiAndBurst();
+      }
+    } else {
+      successMsgDiv.style.display = 'none';
+      tapHeartWrapper.style.display = 'none';
+      fullHeartBg.classList.remove('completed');
+      fullHeartBg.style.color = 'rgba(255, 100, 130, 0.3)';
+      birthdayMsgDiv.classList.remove('show');
+      birthdayMsgDiv.style.display = 'none';
+    }
+  }
+
+  // place half heart inside drop zone (visual)
+  function placeHalf(side) {
+    if (side === 'left') {
+      if (leftPlaced) return;
+      leftPlaced = true;
+      placedLeftDiv.style.display = 'flex';
+      leftPieceElem.style.display = 'none';
+      // optional: disable drag on original
+      leftPieceElem.setAttribute('draggable', 'false');
+      leftPieceElem.style.opacity = '0.4';
+    } else if (side === 'right') {
+      if (rightPlaced) return;
+      rightPlaced = true;
+      placedRightDiv.style.display = 'flex';
+      rightPieceElem.style.display = 'none';
+      rightPieceElem.setAttribute('draggable', 'false');
+      rightPieceElem.style.opacity = '0.4';
+    }
+    checkCompletion();
+  }
+
+  // reset the game
+  function resetGame() {
+    leftPlaced = false;
+    rightPlaced = false;
+    placedLeftDiv.style.display = 'none';
+    placedRightDiv.style.display = 'none';
+    leftPieceElem.style.display = 'flex';
+    rightPieceElem.style.display = 'flex';
+    leftPieceElem.setAttribute('draggable', 'true');
+    rightPieceElem.setAttribute('draggable', 'true');
+    leftPieceElem.style.opacity = '1';
+    rightPieceElem.style.opacity = '1';
+    successMsgDiv.style.display = 'none';
+    tapHeartWrapper.style.display = 'none';
+    fullHeartBg.classList.remove('completed');
+    fullHeartBg.style.color = 'rgba(255, 100, 130, 0.3)';
+    birthdayMsgDiv.classList.remove('show');
+    birthdayMsgDiv.style.display = 'none';
+    birthdayMsgDiv.innerHTML = '';
+  }
+
+  // ---- DRAG & DROP with native HTML5 (simple and smooth) ----
+  function makeDraggable(elem) {
+    elem.setAttribute('draggable', 'true');
+    elem.addEventListener('dragstart', function(e) {
+      e.dataTransfer.setData('text/plain', this.getAttribute('data-side'));
+      e.dataTransfer.effectAllowed = 'move';
+      this.classList.add('dragging');
+    });
+    elem.addEventListener('dragend', function(e) {
+      this.classList.remove('dragging');
+    });
+  }
+
+  // drop zone events
+  dropZone.addEventListener('dragover', function(e) {
+    e.preventDefault();  // required for drop
+    e.dataTransfer.dropEffect = 'move';
+  });
+
+  dropZone.addEventListener('drop', function(e) {
+    e.preventDefault();
+    const side = e.dataTransfer.getData('text/plain');
+    if (!side) return;
+    // prevent dropping if already placed
+    if ((side === 'left' && leftPlaced) || (side === 'right' && rightPlaced)) {
+      // already placed, ignore
+      return;
+    }
+    // place the piece
+    placeHalf(side);
+    // small animation on drop zone
+    dropZone.style.transform = 'scale(0.98)';
+    setTimeout(() => { dropZone.style.transform = ''; }, 150);
+  });
+
+  makeDraggable(leftPieceElem);
+  makeDraggable(rightPieceElem);
+
+  // optional: touch/mobile friendly fallback (drag is not great on mobile, we add simple click-to-place?)
+  // For better mobile experience: if on touch device, we add click listeners on half hearts to place into drop zone?
+  // But drag works partially on mobile with drag and drop? Better add alternative: clicking on piece then click on drop zone.
+  // implement double mode: drag + click placement for reliability
+  let selectedSide = null;
+  leftPieceElem.addEventListener('click', (e) => {
+    if (leftPlaced) return;
+    selectedSide = 'left';
+    leftPieceElem.style.opacity = '0.6';
+    setTimeout(() => { leftPieceElem.style.opacity = '1'; }, 200);
+  });
+  rightPieceElem.addEventListener('click', (e) => {
+    if (rightPlaced) return;
+    selectedSide = 'right';
+    rightPieceElem.style.opacity = '0.6';
+    setTimeout(() => { rightPieceElem.style.opacity = '1'; }, 200);
+  });
+  dropZone.addEventListener('click', (e) => {
+    if (selectedSide && !((selectedSide === 'left' && leftPlaced) || (selectedSide === 'right' && rightPlaced))) {
+      placeHalf(selectedSide);
+      selectedSide = null;
+    } else {
+      // if no selected side, do nothing
+    }
+  });
+
+  // Tap the heart to reveal birthday message
+  tapBtn.addEventListener('click', function() {
+    // show birthday message with animation
+     window.location.href = "./index1.html";
+  });
+
+  // load canvas confetti dynamically if not present
+  function loadConfettiAndBurst(doubleBurst = false) {
+    if (typeof canvasConfetti !== 'undefined') {
+      canvasConfetti({ particleCount: 140, spread: 65, origin: { y: 0.6 } });
+      if (doubleBurst) setTimeout(() => canvasConfetti({ particleCount: 180, spread: 80 }), 150);
+      return;
+    }
+    const script = document.createElement('script');
+    script.src = 'https://cdn.jsdelivr.net/npm/canvas-confetti@1';
+    script.onload = () => {
+      canvasConfetti({ particleCount: 140, spread: 65, origin: { y: 0.6 } });
+      if (doubleBurst) setTimeout(() => canvasConfetti({ particleCount: 180, spread: 80 }), 150);
+    };
+    document.head.appendChild(script);
+  }
+
+  // Reset event
+  resetBtn.addEventListener('click', resetGame);
+
+  // ensure that if both halves placed early, show success on load? default none
+  // Also add search functionality (just for show, but it's there)
+  const searchInput = document.getElementById('searchInput');
+  searchInput.addEventListener('keypress', (e) => {
+    if (e.key === 'Enter') {
+      alert(`🔍 You searched for: "${searchInput.value}"\n✨ Magic is everywhere ✨`);
+      searchInput.value = '';
+    }
+  });
+
+  // small initial confetti just for welcoming (optional)
+  window.addEventListener('load', () => {
+    // preload confetti without disturbing
+    if (typeof canvasConfetti === 'undefined') {
+      const script = document.createElement('script');
+      script.src = 'https://cdn.jsdelivr.net/npm/canvas-confetti@1';
+      document.head.appendChild(script);
+    }
+    // set the emoji representation to match 'half hearts' visually
+    leftPieceElem.innerHTML = '💔';
+    rightPieceElem.innerHTML = '💔';
+    placedLeftDiv.innerHTML = '💖';
+    placedRightDiv.innerHTML = '💖';
+    fullHeartBg.innerHTML = '❤️';
+  });
+</script>
+</body>
+</html>
