@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <!--[if lt IE 7]> <html class="ie lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
 <!--[if IE 7]>    <html class="ie lt-ie9 lt-ie8"> <![endif]-->
@@ -65,6 +64,7 @@
   margin-top: -25px;
   width: 15px;
   height: 50px;
+  z-index: 15; /* ensure candle sits above cake layers */
 }
 .velas:after,
 .velas:before {
@@ -243,6 +243,7 @@
   margin-left: -75px;
   width: 150px;
   height: 100px;
+  z-index: 5;
 }
 .bizcocho:after,
 .bizcocho:before {
@@ -315,7 +316,7 @@ p {
   border-radius: 10px;
 }
 
-/* Custom pink theme overrides (bulb background override removed) */
+/* Custom pink theme overrides */
 body {
   background: linear-gradient(145deg, #fff0f5 0%, #ffe4ee 100%) !important;
 }
@@ -330,7 +331,6 @@ body {
 .message p {
   color: #b34e70 !important;
 }
-/* No .bulb background override – bulbs will use original styles */
 .balloons h2 {
   color: #b34e70 !important;
 }
@@ -362,16 +362,16 @@ body {
     	<h2 style="color:#ffb0c3;">D</h2>
     </div>
 	<div class="balloons text-center" id="b4">
-    	<h2 style="color:#ffc0d0;">B</h2>
+    	<h2 style="color:#ffc0d0;">J</h2>
     </div>
 	<div class="balloons text-center" id="b5">
     	<h2 style="color:#ffd0dc;">A</h2>
     </div>
     <div class="balloons text-center" id="b6">
-    	<h2 style="color:#ffe0e8;">B</h2>
+    	<h2 style="color:#ffe0e8;">A</h2>
     </div>
     <div class="balloons text-center" id="b7">
-    	<h2 style="color:#fff0f5;">Y</h2>
+    	<h2 style="color:#fff0f5;">N</h2>
     </div>
 
     <img src="assets/images/Balloon-Border.png" width="100%" class="balloon-border">
@@ -406,7 +406,11 @@ body {
 		</div>
 		<div class="row cake-cover">
 			<div class="col-md-12 texr-center">
+				<!-- ========== FIXED CAKE STRUCTURE: added missing cake layers ========== -->
 				<div class="cake">
+				  <!-- Cake sponge & frosting layers added for visual cake -->
+				  <div class="bizcocho"></div>
+				  <div class="cobertura"></div>
 				  <div class="velas">
 				    <div class="fuego"></div>
 				    <div class="fuego"></div>
@@ -414,59 +418,12 @@ body {
 				    <div class="fuego"></div>
 				    <div class="fuego"></div>
 				  </div>
-				  
 				</div>
 			</div>
 		</div>
 		<div class="row message">
 			<div class="col-md-12">
-				<p>Today is...</p>
-				<p>as beautiful as other days</p>
-				<p>but you realize</p>
-				<p>another year has gone</p>
-				<p>in a blink of the eyes</p>
-				<p><strong>however</strong></p>
-				<p>Do you know..?</p>
-				<p>today is just special</p>
-				<p>so special to you</p>
-				<p>that's why</p>
-				<p>Let's make it...</p>
-				<p>the best celebration ever</p>
-				<p>and let me share...</p>
-				<p>a piece of happiness to you</p>
-				<p>I made all this...</p>
-				<p>as a birthday present to you</p>
-				<p>I'm glad we met on zzz</p>
-				<p>thanks for the friendship we made</p>
-				<p>thanks for everything</p>
-				<p>I wish you all the best</p>
-				<p>May your life be at ease</p>
-				<p>May all your wishes come true</p>
-				<p>Remember</p>
-				<p>your ambitions</p>
-				<p>you live as a free bird...</p>
-				<p>flying in the blue sky</p>
-				<p>Now things are different...</p>
-				<p>real story of your life</p>
-				<p>is just about to begin</p>
-				<p>indeed..</p>
-				<p>but...</p>
-				<p>don't worry</p>
-				<p>because...</p>
-				<p>God has your back</p>
-				<p>and</p>
-				<p>this year will be better</p>
-				<p>and I hope</p>
-				<p>you'll find...</p>
-				<p>happiness along the way</p>
-				<p>keep your spirit up</p>
-				<p>enjoy every single moment...</p>
-				<p>that you experience today</p>
-				<p>fill it with your most beautiful smile</p>
-				<p>and make it the best memory..</p>
-				<p>lastly...</p>
-				<p>I'd like to wish you one more time</p>
-				<p>a very happy birthday babyy ❤️</p>
+				
 			</div>
 		</div>
 		<div class="navbar navbar-fixed-bottom">
@@ -479,7 +436,7 @@ body {
 					<button class="btn btn-primary" id="cake_fadein">Cake? of course!</button>
 					<button class="btn btn-primary" id="light_candle">Don't forget to Light the Candle</button>
 					<button class="btn btn-primary" id="wish_message">Happy Birthday</button>
-					<button class="btn btn-primary" id="story">A mesage for you</button>
+					
 				</div>
 			</div>
 		</div>
@@ -491,6 +448,88 @@ body {
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script>
 <script src="js/effect.js"></script>
+
+<!-- FIX SCRIPT: Ensures cake appears and candle lights properly without breaking existing buttons -->
+<script>
+  (function() {
+    // Wait for DOM and any existing effect.js handlers but ensure cake+flame work
+    document.addEventListener('DOMContentLoaded', function() {
+      // Get elements
+      const cakeElement = document.querySelector('.cake');
+      const flameElements = document.querySelectorAll('.fuego');
+      const cakeBtn = document.getElementById('cake_fadein');
+      const lightCandleBtn = document.getElementById('light_candle');
+      
+      // Helper to show cake (preserve existing functionality but guarantee visibility)
+      function showCake() {
+        if (cakeElement) {
+          cakeElement.style.display = 'block';
+          // small debug: ensure it becomes visible
+        }
+      }
+      
+      // Helper to light candle (show all flame elements)
+      function lightCandle() {
+        if (flameElements.length) {
+          flameElements.forEach(function(flame) {
+            flame.style.display = 'inline-block';  // make flames visible & start animations
+          });
+        }
+      }
+      
+      // Attach robust click handlers to the buttons
+      // We will NOT remove any existing event listeners (preserve effect.js)
+      // but add our own to enforce cake & candle lighting if original fails.
+      if (cakeBtn) {
+        cakeBtn.addEventListener('click', function(e) {
+          // make sure cake appears on this click
+          showCake();
+        });
+      }
+      
+      if (lightCandleBtn) {
+        lightCandleBtn.addEventListener('click', function(e) {
+          lightCandle();
+        });
+      }
+      
+      // Edge case: If the cake was already made visible by effect.js but missing layers,
+      // our added DOM already includes bizcocho/cobertura. If effect.js toggles display,
+      // fine. Also when "Cake? of course!" is clicked we additionally guarantee.
+      
+      // Additionally, if user clicks "light_candle" before cake appears, flames will be set visible,
+      // but since parent cake might be hidden, flames still store visible style.
+      // Once cake shows they will appear lit. That's acceptable and doesn't break sequence.
+      
+      // Extra polish: If cake is already visible after other actions from effect.js
+      // we need to make sure the cake structure is present (which we fixed in HTML)
+      // also ensure any original class manipulations don't override.
+      
+      // For safety, also listen to any custom event but not needed.
+      
+      // Small improvement: maintain the initial state - cake hidden, flames hidden.
+      // original CSS sets .cake display: none & .fuego display: none.
+      // Our handlers will toggle correctly.
+      
+      // If by any chance other code tries to hide cake again, our show handler on click will re-show.
+      // For double clicks, cake remains visible.
+    });
+  })();
+</script>
+
+<!-- Additional style to guarantee flame visibility when lit -->
+<style>
+  /* ensure flames become visible with smooth animation */
+  .fuego[style*="display: inline-block"], 
+  .fuego[style*="display: inline-block"] {
+    display: inline-block !important;
+  }
+  /* on candle lighting, add slight glow to candle */
+  .velas.lit-effect {
+    box-shadow: 0 0 8px #ffb347;
+  }
+</style>
+
 <!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-8SQ2H9J48M"></script>
 <script>
